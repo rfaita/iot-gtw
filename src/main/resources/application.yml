@@ -1,0 +1,69 @@
+server:
+  port: 9081
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9080/auth/realms/iot
+  cloud:
+    gateway:
+      x-forwarded:
+        enable: true
+        forEnabled: true
+        protoEnabled: true
+      routes:
+        - id: keycloak
+          uri: http://localhost:9080
+          predicates:
+            - Path=/kc/**
+          filters:
+            - RewritePath=/kc/(?<segment>.*), /$\{segment}
+        - id: tsa
+          uri: http://localhost:9090
+          predicates:
+            - Path=/api/tsa/**
+          filters:
+            - RewritePath=/api/tsa/(?<segment>.*), /$\{segment}
+            - TenantId=
+            - UserId=
+        - id: asset
+          uri: http://localhost:9091
+          predicates:
+            - Path=/api/asset/**
+          filters:
+            - RewritePath=/api/asset/(?<segment>.*), /$\{segment}
+            - TenantId=
+            - UserId=
+
+---
+spring:
+  profiles: docker-compose
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak-service:8080/auth/realms/iot
+  cloud:
+    gateway:
+      routes:
+        - id: keycloak
+          uri: http://keycloak-service:8080
+          predicates:
+            - Path=/auth/**
+        - id: tsa
+          uri: http://tsa-service:9090
+          predicates:
+            - Path=/api/tsa/**
+          filters:
+            - RewritePath=/api/tsa/(?<segment>.*), /$\{segment}
+            - TenantId=
+            - UserId=
+        - id: asset
+          uri: http://asset-service:9091
+          predicates:
+            - Path=/api/asset/**
+          filters:
+            - RewritePath=/api/asset/(?<segment>.*), /$\{segment}
+            - TenantId=
+            - UserId=
