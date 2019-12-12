@@ -5,9 +5,10 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:9080/auth/realms/iot
+          issuer-uri: http://localhost:9080/keycloak/auth/realms/iot
   cloud:
     gateway:
+      forwarded: true
       x-forwarded:
         enable: true
         forEnabled: true
@@ -16,9 +17,7 @@ spring:
         - id: keycloak
           uri: http://localhost:9080
           predicates:
-            - Path=/kc/**
-          filters:
-            - RewritePath=/kc/(?<segment>.*), /$\{segment}
+            - Path=/keycloak/**
         - id: tsa
           uri: http://localhost:9090
           predicates:
@@ -43,14 +42,19 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak-service:8080/auth/realms/iot
+          issuer-uri: http://keycloak-service:8080/keycloak/auth/realms/iot
   cloud:
     gateway:
+      forwarded: true
+      x-forwarded:
+        enable: true
+        forEnabled: true
+        protoEnabled: true
       routes:
         - id: keycloak
           uri: http://keycloak-service:8080
           predicates:
-            - Path=/auth/**
+            - Path=/keycloak/**
         - id: tsa
           uri: http://tsa-service:9090
           predicates:
