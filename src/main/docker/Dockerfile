@@ -1,7 +1,9 @@
 FROM openjdk:8-jdk-alpine
 
-#ENV http_proxy http://10.144.1.10:8080
-#ENV http_proxys http://10.144.1.10:8080
+ARG HTTP_PROXY
+
+ENV http_proxy ${HTTP_PROXY:''}
+ENV http_proxys ${HTTP_PROXY:''}
 
 VOLUME /tmp
 RUN apk add --no-cache netcat-openbsd &&\
