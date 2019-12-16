@@ -2,8 +2,8 @@ FROM openjdk:8-jdk-alpine
 
 ARG HTTP_PROXY
 
-ENV http_proxy ${HTTP_PROXY:''}
-ENV http_proxys ${HTTP_PROXY:''}
+ENV http_proxy ${HTTP_PROXY}
+ENV http_proxys ${HTTP_PROXY}
 
 VOLUME /tmp
 RUN apk add --no-cache netcat-openbsd &&\
