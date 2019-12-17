@@ -1,7 +1,9 @@
 package com.iot.iotgtw.config;
 
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -9,6 +11,9 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -29,8 +34,7 @@ public class SecurityConfig {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) throws Exception {
         http.oauth2ResourceServer()
                 .jwt()
-                    .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                .authenticationManager(authentication -> )
+                    .jwtAuthenticationConverter(jwtAuthenticationConverter());
         // Require authentication for all requests
         http.authorizeExchange()
                 .anyExchange().authenticated();
@@ -71,6 +75,15 @@ public class SecurityConfig {
             this.jwtGrantedAuthoritiesConverter = jwtGrantedAuthoritiesConverter;
         }
     }
+
+//    @Bean
+//    @Primary
+//    public JwtDecoder jwtDecoderByIssuerUri2(OAuth2ResourceServerProperties properties) {
+//        String issuerUri = properties.getJwt().getIssuerUri();
+//        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromIssuerLocation(issuerUri);
+//        // Use preferred_username from claims as authentication name, instead of UUID subject
+//        return jwtDecoder;
+//    }
 
     class KeycloakRealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
         @Override

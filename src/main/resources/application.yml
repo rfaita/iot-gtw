@@ -5,7 +5,9 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost/keycloak/auth/realms/iot
+          #issuer-uri: http://localhost/keycloak/auth/realms/iot
+          jwk-set-uri: http://localhost/keycloak/auth/realms/iot/protocol/openid-connect/certs
+
   cloud:
     gateway:
       forwarded: true
@@ -37,7 +39,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://nginx-service/keycloak/auth/realms/iot
+          #issuer-uri: http://nginx-service/keycloak/auth/realms/iot
+          jwk-set-uri: http://nginx-service/keycloak/auth/realms/iot/protocol/openid-connect/certs
   cloud:
     gateway:
       forwarded: true
