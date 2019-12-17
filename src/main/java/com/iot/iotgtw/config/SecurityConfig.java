@@ -27,10 +27,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) throws Exception {
-        http.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());
+        http.oauth2ResourceServer()
+                .jwt()
+                    .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                .authenticationManager(authentication -> )
         // Require authentication for all requests
         http.authorizeExchange()
-                .pathMatchers("/keycloak/**").permitAll()
                 .anyExchange().authenticated();
         // Allow showing pages within a frame
         http.headers().frameOptions().mode(XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN);
