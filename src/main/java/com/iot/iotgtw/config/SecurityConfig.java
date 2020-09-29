@@ -40,7 +40,7 @@ public class SecurityConfig {
 
         http.csrf().disable();
 
-sim         return http.build();
+        return http.build();
     }
 
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
